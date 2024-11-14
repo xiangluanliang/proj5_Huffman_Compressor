@@ -20,7 +20,6 @@
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
-//#include <fileedit.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -41,7 +40,6 @@ public:
     QHBoxLayout *horizontalLayout;
     QLineEdit *lineEdit;
     QPushButton *pushButton_3;
-    QLineEdit *lineEdit_3;
     QProgressBar *progressBar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -55,9 +53,11 @@ public:
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         groupBox = new QGroupBox(centralwidget);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        groupBox->setGeometry(QRect(80, 107, 81, 71));
+        groupBox->setGeometry(QRect(50, 80, 91, 71));
+        groupBox->setTitle(QString::fromUtf8(""));
         verticalLayout = new QVBoxLayout(groupBox);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        verticalLayout->setContentsMargins(-1, 0, -1, -1);
         radioButton = new QRadioButton(groupBox);
         radioButton->setObjectName(QString::fromUtf8("radioButton"));
         radioButton->setAcceptDrops(false);
@@ -72,7 +72,7 @@ public:
 
         widget_2 = new QWidget(centralwidget);
         widget_2->setObjectName(QString::fromUtf8("widget_2"));
-        widget_2->setGeometry(QRect(110, 60, 251, 31));
+        widget_2->setGeometry(QRect(10, 40, 371, 51));
         horizontalLayout_2 = new QHBoxLayout(widget_2);
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
         lineEdit_2 = new QLineEdit(widget_2);
@@ -88,10 +88,10 @@ public:
 
         pushButton = new QPushButton(centralwidget);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
-        pushButton->setGeometry(QRect(220, 120, 131, 41));
+        pushButton->setGeometry(QRect(160, 110, 181, 31));
         widget = new QWidget(centralwidget);
         widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(110, 27, 251, 31));
+        widget->setGeometry(QRect(10, 0, 371, 41));
         horizontalLayout = new QHBoxLayout(widget);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         lineEdit = new QLineEdit(widget);
@@ -105,13 +105,9 @@ public:
 
         horizontalLayout->addWidget(pushButton_3);
 
-//        lineEdit_3 = new FileEdit(centralwidget);
-        lineEdit_3->setObjectName(QString::fromUtf8("lineEdit_3"));
-        lineEdit_3->setGeometry(QRect(40, 27, 71, 61));
-        lineEdit_3->setReadOnly(true);
         progressBar = new QProgressBar(centralwidget);
         progressBar->setObjectName(QString::fromUtf8("progressBar"));
-        progressBar->setGeometry(QRect(190, 130, 181, 21));
+        progressBar->setGeometry(QRect(30, 160, 341, 20));
         progressBar->setValue(0);
         MainWindow->setCentralWidget(centralwidget);
 
@@ -123,13 +119,11 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        groupBox->setTitle(QCoreApplication::translate("MainWindow", "\350\277\233\350\241\214\347\232\204\346\226\207\344\273\266\346\223\215\344\275\234", nullptr));
         radioButton->setText(QCoreApplication::translate("MainWindow", "\345\216\213\347\274\251", nullptr));
         radioButton_2->setText(QCoreApplication::translate("MainWindow", "\350\247\243\345\216\213\347\274\251", nullptr));
-        pushButton_4->setText(QCoreApplication::translate("MainWindow", "\346\226\207\344\273\266\350\276\223\345\207\272\350\267\257\345\276\204", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("MainWindow", "\350\276\223\345\207\272\346\226\207\344\273\266", nullptr));
         pushButton->setText(QCoreApplication::translate("MainWindow", "\345\216\213\347\274\251", nullptr));
-        pushButton_3->setText(QCoreApplication::translate("MainWindow", "\346\226\207\344\273\266\350\276\223\345\205\245\350\267\257\345\276\204", nullptr));
-        lineEdit_3->setText(QCoreApplication::translate("MainWindow", "  \346\226\207\344\273\266\346\213\226\345\205\245", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("MainWindow", "\350\276\223\345\205\245\346\226\207\344\273\266", nullptr));
     } // retranslateUi
 
 };

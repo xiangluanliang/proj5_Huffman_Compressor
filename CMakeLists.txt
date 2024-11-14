@@ -22,7 +22,8 @@ add_executable(Proj5_Huffman_Compressor main.cpp
         RLC.cpp
         RLC.h
         Huffman.h
-        Huffman.cpp)
+        Huffman.cpp
+)
 target_link_libraries(Proj5_Huffman_Compressor
         Qt5::Core
         Qt5::Gui

@@ -24,6 +24,13 @@ public:
     compressor();
     void encode(QString path_in,QString path_out);
     void decode(QString path_in,QString path_out);
+    QString get_suffix();
 
+    QString path_in;
+    QString path_out;
+
+
+signals:
+    void zip_finished();
 };
 #endif //PROJ5_HUFFMAN_COMPRESSOR_COMPRESSOR_H
