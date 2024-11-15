@@ -14,6 +14,7 @@
 #include <vector>
 #include <QFile>
 #include <QDebug>
+#include <QFileInfo>
 
 class RLC{
 public:

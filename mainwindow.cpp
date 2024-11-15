@@ -164,7 +164,7 @@ void MainWindow::on_pushButton_clicked() {
     }
 
     // 在这里文件已经创建，如果放在上面的上面，每次都会"警告", "文件已存在，是否覆盖"，但是上面的程序检测了if(!QFile(zip->path_out).open(QIODevice::WriteOnly))吗
-    if (!QFile(zip->path_out).open(QIODevice::WriteOnly)) // 文件不存在会返回true吗，就是可写？但是open不了？ReadOnly这种情况一定返回false？
+    if (!QFile(zip->path_out).open(QIODevice::WriteOnly))
     {
         QMessageBox::critical(this, "错误", "无法写入文件", QMessageBox::Ok);
         ui->lineEdit_2->setText(zip->path_out);
@@ -207,7 +207,6 @@ void MainWindow::zip_finished() {
     msgBox.setWindowTitle("已完成");
     if (isCompressor == 1) {
         msgBox.setText("请查看压缩率");
-
         qint64 originalSize = QFile(zip->path_in).size(); // byte
         qint64 compressedSize = QFile(zip->path_out).size();
         double compressionRatio = (double) compressedSize / originalSize;
@@ -217,30 +216,24 @@ void MainWindow::zip_finished() {
             压缩后:compressedSize byte
             压缩率:percent
         */
-        // 创建一个QMessageBox对象
+
         QMessageBox messageBox;
-        // 设置对话框的标题
         messageBox.setWindowTitle("Compression Result");
         messageBox.setText(
                 "压缩前:" + QString::number(originalSize) + " byte\n" + "压缩后:" + QString::number(compressedSize) +
                 " byte\n" + "压缩率:" + percent + "\n");
-        // 设置对话框的图标，可以选择NoIcon、Information、Warning、Critical、Question等类型
         messageBox.setIcon(QMessageBox::Information);
-        // 设置对话框的按钮，可以选择Ok、Yes、No、Cancel等类型，也可以自定义按钮
         messageBox.setStandardButtons(QMessageBox::Ok);
-        // 显示对话框
         messageBox.exec();
-
-
-        msgBox.hide();
-        msgBox.setText("......");
-        ui->progressBar->setMaximum(100);
-        ui->progressBar->setValue(100);
-        QMessageBox::information(this, "提示", " 程序已完成", QMessageBox::Ok);
-        ui->progressBar->hide();
-        ui->pushButton->show();
-        ui->progressBar->setValue(0);
-        ui->lineEdit_2->setText(zip->path_out);
-        ui->lineEdit->setText(zip->path_in);
     }
+    msgBox.hide();
+    msgBox.setText("......");
+    ui->progressBar->setMaximum(100);
+    ui->progressBar->setValue(100);
+    QMessageBox::information(this, "提示", " 程序已完成", QMessageBox::Ok);
+    ui->progressBar->hide();
+    ui->pushButton->show();
+    ui->progressBar->setValue(0);
+    ui->lineEdit_2->setText(zip->path_out);
+    ui->lineEdit->setText(zip->path_in);
 }

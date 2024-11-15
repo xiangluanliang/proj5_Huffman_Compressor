@@ -38,7 +38,7 @@ HuffmanNode *HuffmanCoding::buildTree(int *frequencyCount) {
 
 //先写一个弱智递归
 void HuffmanCoding::generateCodes(HuffmanNode *root, unsigned int code, int length,
-                   QMap<unsigned char, std::pair<unsigned int, int>> &huffmanCodes) {
+                                  QMap<unsigned char, std::pair<unsigned int, int>> &huffmanCodes) {
     if (!root) return;
 
     if (!root->left && !root->right) {
@@ -50,32 +50,47 @@ void HuffmanCoding::generateCodes(HuffmanNode *root, unsigned int code, int leng
     generateCodes(root->right, (code << 1) | 1, length + 1, huffmanCodes);
 }
 
-void HuffmanCoding::serializeTree(HuffmanNode* node, QFile& outfile) {
+void HuffmanCoding::serializeTree(HuffmanNode *node, QFile &outfile) {
+    QDataStream out(&outfile);
+    serializeTreeBits(node, out);
+}
+
+// 辅助函数，将树节点转换为bit位写入文件
+void HuffmanCoding::serializeTreeBits(HuffmanNode *node, QDataStream &out) {
     if (!node) {
-        // 用特殊标记表示空节点
-        outfile.write("0", 1);
+        // 用bit位“0”表示空节点
+        out << false;
         return;
     }
-    // 用 "1" 表示非空节点，然后写入字符
-    outfile.write("1", 1);
-    outfile.write(reinterpret_cast<const char*>(&node->data), 1);
 
-    serializeTree(node->left, outfile);
-    serializeTree(node->right, outfile);
+    // 用bit位“1”表示非空节点，再写入8位的字符数据
+    out << true;
+    out << node->data;  // 写入字符数据的8位
+
+    // 递归处理左右子节点
+    serializeTreeBits(node->left, out);
+    serializeTreeBits(node->right, out);
 }
 
 // 反序列化Huffman树
-HuffmanNode* HuffmanCoding::deserializeTree(QFile& infile) {
-    char flag;
-    infile.read(&flag, 1);
-    if (flag == '0') return nullptr; // 空节点
+HuffmanNode *HuffmanCoding::deserializeTree(QFile &infile) {
+    QDataStream in(&infile);
+    return deserializeTreeBits(in);
+}
+
+HuffmanNode *HuffmanCoding::deserializeTreeBits(QDataStream &in) {
+    bool isNode;
+    in >> isNode;
+
+    if (!isNode) return nullptr; // 空节点
 
     unsigned char data;
-    infile.read(reinterpret_cast<char*>(&data), 1);
-    HuffmanNode* node = new HuffmanNode(data, 0);
+    in >> data;
 
-    node->left = deserializeTree(infile);
-    node->right = deserializeTree(infile);
+    HuffmanNode *node = new HuffmanNode(data, 0);
+
+    node->left = deserializeTreeBits(in);
+    node->right = deserializeTreeBits(in);
 
     return node;
 }
@@ -109,6 +124,15 @@ void HuffmanCoding::makeHuffman(QString path_in, QString path_out) {
         infile.close();
         return;
     }
+
+    std::string str_suffix = HuffmanCoding::get_suffix(path_in).toStdString();
+    char char_0 = '\0';
+    for (int i = 0; i < str_suffix.size(); i++)
+    {
+        outfile.write((char *)&str_suffix[i], 1);
+    }
+    outfile.write(&char_0, 1);
+
     //先写序列化哈夫曼树
     serializeTree(root, outfile);
 //    outfile.write((char *)frequencyCount, 256 * sizeof(int));
@@ -151,6 +175,14 @@ void HuffmanCoding::decodeHuffman(QString path_in, QString path_out) {
         return;
     }
 
+    char temp_char_find0;
+    while (infile.read((char *)&temp_char_find0, 1))
+    {
+        if (temp_char_find0 == '\0')
+        {
+            break;
+        }
+    }
     // 读取频率表
 //    int frequencyCount[256] = {0};
 //    infile.read(reinterpret_cast<char*>(frequencyCount), 256 * sizeof(int));
@@ -169,10 +201,10 @@ void HuffmanCoding::decodeHuffman(QString path_in, QString path_out) {
     }
 
     unsigned char bitBuffer = 0;
-    HuffmanNode* currentNode = root;
+    HuffmanNode *currentNode = root;
 
     while (!infile.atEnd()) {
-        infile.read(reinterpret_cast<char*>(&bitBuffer), 1);
+        infile.read(reinterpret_cast<char *>(&bitBuffer), 1);
 //        std::cout << std::bitset<8>(bitBuffer) << " ";
 
         for (int i = 7; i >= 0; --i) {
@@ -185,7 +217,7 @@ void HuffmanCoding::decodeHuffman(QString path_in, QString path_out) {
             }
 
             if (!currentNode->left && !currentNode->right) {
-                outfile.write(reinterpret_cast<char*>(&currentNode->data), 1);
+                outfile.write(reinterpret_cast<char *>(&currentNode->data), 1);
 //                std::cout<< currentNode->data <<std::endl;
 
                 currentNode = root;
@@ -198,3 +230,19 @@ void HuffmanCoding::decodeHuffman(QString path_in, QString path_out) {
     root = nullptr;
 }
 
+QString HuffmanCoding::get_suffix(QString path_in) {
+    QFile infile(path_in);
+    infile.open(QIODevice::ReadOnly);
+
+    std::string temp_str_suffix;
+    char temp_char_suffix;
+    while (infile.read((char *) &temp_char_suffix, 1)) {
+        if (temp_char_suffix == '\0') {
+            infile.close();
+            return QString::fromStdString(temp_str_suffix);
+        } else {
+            temp_str_suffix += temp_char_suffix;
+        }
+    }
+    infile.close();
+}

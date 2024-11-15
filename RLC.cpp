@@ -24,6 +24,13 @@ void RLC::makeRLC(QString path_in, QString path_out) {
         infile.close();
         return;
     }
+    std::string str_suffix = QFileInfo(path_in).suffix().toStdString();
+    char char_0 = '\0';
+    for (int i = 0; i < str_suffix.size(); i++)
+    {
+        outfile.write((char *)&str_suffix[i], 1);
+    }
+    outfile.write(&char_0, 1);
 
     unsigned char currentChar, previousChar = 0xFF;
     int count = 0;
@@ -118,6 +125,14 @@ void RLC::decodeRLC(QString path_in, QString path_out) {
         qDebug() << "无法打开输出文件";
         infile.close();
         return;
+    }
+    char temp_char_find0;
+    while (infile.read((char *)&temp_char_find0, 1))
+    {
+        if (temp_char_find0 == '\0')
+        {
+            break;
+        }
     }
 
     unsigned char currentChar, countByte, repeatedChar;

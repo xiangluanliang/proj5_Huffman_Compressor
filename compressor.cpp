@@ -43,7 +43,7 @@ void compressor::decode(QString path_in, QString path_out) {
 
 //修改
 QString compressor::get_suffix() {
-    return "txt";
+    return HuffmanCoding::get_suffix(path_in);
 }
 
 
