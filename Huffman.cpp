@@ -124,15 +124,13 @@ void HuffmanCoding::makeHuffman(QString path_in, QString path_out) {
         infile.close();
         return;
     }
-
-    std::string str_suffix = HuffmanCoding::get_suffix(path_in).toStdString();
+    std::string str_suffix = QFileInfo(path_in).suffix().toStdString();
     char char_0 = '\0';
     for (int i = 0; i < str_suffix.size(); i++)
     {
         outfile.write((char *)&str_suffix[i], 1);
     }
     outfile.write(&char_0, 1);
-
     //先写序列化哈夫曼树
     serializeTree(root, outfile);
 //    outfile.write((char *)frequencyCount, 256 * sizeof(int));

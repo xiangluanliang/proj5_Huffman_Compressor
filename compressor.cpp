@@ -12,14 +12,10 @@ compressor::compressor() : QObject(nullptr),path_in(""),path_out(""){
 }
 
 void compressor::encode(QString path_in, QString path_out) {
-    RLC* r = new RLC();
-    QString mid = "mid_file.rlc";
-    r->makeRLC(path_in, mid);
 
     HuffmanCoding* h = new HuffmanCoding();
-    h->makeHuffman(mid, path_out);
+    h->makeHuffman(path_in, path_out);
 
-    QFile::remove(mid);
     std::cout<< "压缩完成" <<std::endl;
     emit zip_finished();
 
@@ -29,14 +25,9 @@ void compressor::encode(QString path_in, QString path_out) {
 void compressor::decode(QString path_in, QString path_out) {
     // 解压哈夫曼编码
     HuffmanCoding* h = new HuffmanCoding();
-    QString mid = "mid_file.rlc";
-    h->decodeHuffman(path_in, mid);
 
-    // 解压游程编码
-    RLC* r = new RLC();
-    r->decodeRLC(mid, path_out);
-    QFile::remove(mid);
-    
+    h->decodeHuffman(path_in, path_out);
+
     std::cout<< "解压完成" <<std::endl;
     emit zip_finished();
 }
